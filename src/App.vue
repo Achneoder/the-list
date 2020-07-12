@@ -34,24 +34,60 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld />
+      <t-list />
+      <v-btn fixed dark fab bottom right color="pink" @click="dialog = true">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+      <v-dialog :value="dialog" persistent max-width="600px">
+              <v-card>
+        <v-card-title>
+          <span class="headline">New Item</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field label="Item" required v-model="newItem"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDialog()">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="closeDialog(true)">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+      </v-dialog>
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { Component } from "vue-property-decorator";
+import TList from "./components/TList.vue";
+import ListStore from './store/ListStore';
+import { getModule } from 'vuex-module-decorators';
 
-export default Vue.extend({
-  name: "App",
-
+@Component({
   components: {
-    HelloWorld
+    TList
   },
+})
+export default class App extends Vue {
+  public listStore: ListStore = getModule(ListStore, this.$store);
+  private dialog = false;
+  private newItem: string | null = null;
 
-  data: () => ({
-    //
-  })
-});
+  private closeDialog(save = false) {
+    if(save && this.newItem) {
+      this.listStore.addListItem(this.newItem);
+    }
+    this.newItem = null;
+    this.dialog = false;
+  }
+
+
+}
 </script>
