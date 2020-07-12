@@ -12,7 +12,7 @@
       </v-list-item-content>
 
       <v-list-item-action>
-        <v-btn icon>
+        <v-btn icon @click="deleteItem(item.id)">
           <v-icon color="red lighten-1">mdi-delete</v-icon>
         </v-btn>
       </v-list-item-action>
@@ -27,14 +27,18 @@ import { ListItem } from '../types/ListItem';
 
 @Component
 export default class ListCard extends Vue {
-  public listStore: ListStore = getModule(ListStore, this.$store);
+  private listStore: ListStore = getModule(ListStore, this.$store);
 
   get listItems(): Array<ListItem> {
-    return this.listStore.listItems;
+    return this.listStore.listItems.filter((item: ListItem) => !item.done);
   }
 
-  public setDone(id: number) {
+  private setDone(id: number) {
     this.listStore.setDone(id);
+  }
+
+  private deleteItem(id: number) {
+    this.listStore.deleteItem(id);
   }
 }
 </script>
