@@ -62,7 +62,7 @@ export default class ListCard extends Vue {
 
   private closeDialog(save = false) {
     if (save && this.newItem) {
-      this.listStore.addListItem(this.newItem);
+      this.listStore.addNewListItem(this.newItem);
     }
     this.newItem = null;
     this.open = false;

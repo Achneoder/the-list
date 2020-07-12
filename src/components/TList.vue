@@ -1,12 +1,12 @@
 <template>
   <v-list two-line subheader>
     <v-subheader inset>Entries</v-subheader>
-    <div v-for="(item, index) in listItems" :key="item.id">
+    <div v-for="(item, index) in listItems" :key="item.uuid">
       <v-list-item>
         <v-list-item-avatar>
           <v-checkbox
             :value="item.done"
-            @change="setDone(item.id)"
+            @change="setDone(item.uuid)"
           ></v-checkbox>
         </v-list-item-avatar>
 
@@ -15,7 +15,7 @@
         </v-list-item-content>
 
         <v-list-item-action>
-          <v-btn icon @click="deleteItem(item.id)">
+          <v-btn icon @click="deleteItem(item.uuid)">
             <v-icon color="red lighten-1">mdi-delete</v-icon>
           </v-btn>
         </v-list-item-action>
@@ -38,12 +38,12 @@ export default class ListCard extends Vue {
     return this.listStore.listItems.filter((item: ListItem) => !item.done);
   }
 
-  private setDone(id: number) {
-    this.listStore.setDone(id);
+  private setDone(uuid: string) {
+    this.listStore.setDone(uuid);
   }
 
-  private deleteItem(id: number) {
-    this.listStore.deleteItem(id);
+  private deleteItem(uuid: string) {
+    this.listStore.deleteItem(uuid);
   }
 }
 </script>

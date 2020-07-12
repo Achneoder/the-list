@@ -11,14 +11,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import NewItemDialog from "./components/NewItemDialog.vue";
-import TList from "./components/TList.vue";
-import ListStore from "./store/ListStore";
+import { Component, Vue } from "vue-property-decorator";
 import { getModule } from "vuex-module-decorators";
+import ListStore from './store/ListStore';
+import { ListItem } from './types/ListItem';
 
 @Component
 export default class App extends Vue {
+  private listStore: ListStore = getModule(ListStore, this.$store);
+
+  mounted() {
+    this.listStore.gunDb.map().on((listItem, id) => {
+      if(!this.listStore.listItems.find((item: ListItem) => item.id === id)) {
+        this.listStore.addListItem({...(listItem as ListItem), id});
+      }
+    });
+  }
 }
 </script>

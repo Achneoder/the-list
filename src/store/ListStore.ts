@@ -1,38 +1,60 @@
 import { Module, VuexModule, Mutation } from "vuex-module-decorators";
 import { ListItem } from "@/types/ListItem";
+import { v4 } from 'uuid';
+import Gun from 'gun';
 
 @Module({ namespaced: true, name: "ListStore" })
-export default class ListStore extends VuexModule {
-  private lastId = 0;
-
+export default class ListStore extends VuexModule {  
+  private db = Gun().get('the-list-todo');
   private items: Array<ListItem> = [];
 
   get listItems(): Array<ListItem> {
     return this.items;
   }
 
-  @Mutation
-  public addListItem(title: string) {
-    this.items.push({ id: this.lastId, title, done: false });
-    this.lastId++;
+  get gunDb() {
+    return this.db;
   }
 
   @Mutation
-  public setDone(id: number) {
-    const existingItem = this.items.find((item: ListItem) => item.id === id);
+  public addNewListItem(title: string) {
+    const item = { uuid: v4(), title, done: false }
+    // this.items.push(item);
+    //@ts-ignore
+    this.db.set(item);
+  }
+
+  @Mutation
+  public addListItem(item: ListItem) {
+    this.items.push(item);
+  }
+
+  @Mutation
+  public setDone(uuid: string) {
+    const existingItem = this.items.find((item: ListItem) => item.uuid === uuid);
     if (existingItem) {
-      this.items.splice(this.items.indexOf(existingItem), 1, {
+      const index = this.items.indexOf(existingItem);
+      this.items.splice(index, 1, {
         ...existingItem,
         done: true,
       });
+      const updated = this.items[index];
+      console.log('updated,', updated);
+      //@ts-ignore
+      this.db.get(updated.id).set({...updated, id: undefined});
     }
   }
 
   @Mutation
-  deleteItem(id: number) {
-    const existingItem = this.items.find((item: ListItem) => item.id === id);
+  deleteItem(uuid: string) {
+    const existingItem = this.items.find((item: ListItem) => item.uuid === uuid);
     if (existingItem) {
-      this.items.splice(this.items.indexOf(existingItem), 1);
+      console.log('items before', this.items);
+      const updated = this.items.splice(this.items.indexOf(existingItem), 1);
+      console.log('deleted', updated);
+      console.log('items after', this.items);
+      //@ts-ignore
+      this.db.get(updated[0].id).set(null);
     }
   }
 }

@@ -1,5 +1,6 @@
 export interface ListItem {
-  id: number;
+  id?: number | string | symbol;
+  uuid: string;
   done: boolean;
   title: string;
 }
