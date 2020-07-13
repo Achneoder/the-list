@@ -39,9 +39,8 @@ export default class ListStore extends VuexModule {
         done: true,
       });
       const updated = this.items[index];
-      console.log('updated,', updated);
       //@ts-ignore
-      this.db.get(updated.id).set({...updated, id: undefined});
+      this.db.get(updated.id).put(updated);
     }
   }
 
@@ -49,12 +48,10 @@ export default class ListStore extends VuexModule {
   deleteItem(uuid: string) {
     const existingItem = this.items.find((item: ListItem) => item.uuid === uuid);
     if (existingItem) {
-      console.log('items before', this.items);
       const updated = this.items.splice(this.items.indexOf(existingItem), 1);
-      console.log('deleted', updated);
-      console.log('items after', this.items);
+      console.log(updated);
       //@ts-ignore
-      this.db.get(updated[0].id).set(null);
+      this.db.get(updated[0].id).put(null);
     }
   }
 }

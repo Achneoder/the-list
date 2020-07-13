@@ -22,7 +22,7 @@ export default class App extends Vue {
 
   mounted() {
     this.listStore.gunDb.map().on((listItem, id) => {
-      if(!this.listStore.listItems.find((item: ListItem) => item.id === id)) {
+      if(listItem && !this.listStore.listItems.find((item: ListItem) => item.id === id)) {
         this.listStore.addListItem({...(listItem as ListItem), id});
       }
     });
