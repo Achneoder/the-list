@@ -13,3 +13,7 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount("#app");
+
+const GUN_PEERS = process.env.VUE_APP_GUN_PEERS?.split(",");
+
+export { GUN_PEERS };
