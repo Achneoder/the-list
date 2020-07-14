@@ -13,8 +13,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { getModule } from "vuex-module-decorators";
-import ListStore from './store/ListStore';
-import { ListItem } from './types/ListItem';
+import ListStore from "./store/ListStore";
+import { ListItem } from "./types/ListItem";
 
 @Component
 export default class App extends Vue {
@@ -22,8 +22,10 @@ export default class App extends Vue {
 
   mounted() {
     this.listStore.gunDb.map().on((listItem, id) => {
-      if(listItem && !this.listStore.listItems.find((item: ListItem) => item.id === id)) {
-        this.listStore.addListItem({...(listItem as ListItem), id});
+      if (listItem) {
+        this.listStore.setListItem({ ...(listItem as ListItem), id });
+      } else {
+        this.listStore.deleteItem(id);
       }
     });
   }

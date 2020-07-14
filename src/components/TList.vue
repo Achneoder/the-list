@@ -43,7 +43,7 @@ export default class ListCard extends Vue {
   }
 
   private deleteItem(uuid: string) {
-    this.listStore.deleteItem(uuid);
+    this.listStore.triggerDelete(uuid);
   }
 }
 </script>
